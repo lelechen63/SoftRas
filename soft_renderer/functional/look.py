@@ -3,7 +3,7 @@ import torch
 import torch.nn.functional as F
 
 
-def look(vertices, eye, direction=[0, 1, 0], up=None):
+def look(vertices, eye, direction, up):
     """
     "Look" transformation of vertices.
     """
@@ -17,7 +17,7 @@ def look(vertices, eye, direction=[0, 1, 0], up=None):
     elif isinstance(direction, np.ndarray):
         direction = torch.from_numpy(direction).to(device)
     elif torch.is_tensor(direction):
-        direction.to(device)
+        direction = direction.to(device)
 
     if isinstance(eye, list) or isinstance(eye, tuple):
         eye = torch.tensor(eye, dtype=torch.float32, device=device)
@@ -25,6 +25,13 @@ def look(vertices, eye, direction=[0, 1, 0], up=None):
         eye = torch.from_numpy(eye).to(device)
     elif torch.is_tensor(eye):
         eye = eye.to(device)
+
+    if isinstance(up, list) or isinstance(up, tuple):
+        up = torch.tensor(up, dtype=torch.float32, device=device)
+    elif isinstance(up, np.ndarray):
+        up = torch.from_numpy(up).to(device)
+    elif torch.is_tensor(up):
+        up = up.to(device)
 
     if eye.ndimension() == 1:
         eye = eye[None, :]
