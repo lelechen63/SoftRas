@@ -49,20 +49,21 @@ class LookAt(nn.Module):
 
 
 class Look(nn.Module):
-    def __init__(self, camera_direction=[0,0,1], perspective=True, viewing_angle=30, viewing_scale=1.0, eye=None):
+    def __init__(self, perspective=True, viewing_angle=30, viewing_scale=1.0, eye=None, camera_direction=[0,0,1], camera_up=None):
         super(Look, self).__init__()
         
         self.perspective = perspective
         self.viewing_angle = viewing_angle
         self.viewing_scale = viewing_scale
         self._eye = eye
-        self.camera_direction = [0, 0, 1]
+        self.camera_direction = camera_direction
+        self._up = camera_up
 
         if self._eye is None:
             self._eye = [0, 0, -(1. / math.tan(math.radians(self.viewing_angle)) + 1)]
 
     def forward(self, vertices):
-        vertices = srf.look(vertices, self._eye, self.camera_direction)
+        vertices = srf.look(vertices, self._eye, self.camera_direction, self._up)
         # perspective transformation
         if self.perspective:
             vertices = srf.perspective(vertices, angle=self.viewing_angle)
@@ -74,14 +75,14 @@ class Look(nn.Module):
 class Transform(nn.Module):
     def __init__(self, camera_mode='projection', P=None, dist_coeffs=None, orig_size=512,
                  perspective=True, viewing_angle=30, viewing_scale=1.0, 
-                 eye=None, camera_direction=[0,0,1]):
+                 eye=None, camera_direction=[0,0,1], camera_up=None):
         super(Transform, self).__init__()
 
         self.camera_mode = camera_mode
         if self.camera_mode == 'projection':
             self.transformer = Projection(P, dist_coeffs, orig_size)
         elif self.camera_mode == 'look':
-            self.transformer = Look(perspective, viewing_angle, viewing_scale, eye, camera_direction)
+            self.transformer = Look(perspective, viewing_angle, viewing_scale, eye, camera_direction, camera_up)
         elif self.camera_mode == 'look_at':
             self.transformer = LookAt(perspective, viewing_angle, viewing_scale, eye)
         else:
