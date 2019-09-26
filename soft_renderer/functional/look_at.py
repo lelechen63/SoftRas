@@ -19,14 +19,14 @@ def look_at(vertices, eye, at=[0, 0, 0], up=[0, 1, 0]):
     elif isinstance(at, np.ndarray):
         at = torch.from_numpy(at).to(device)
     elif torch.is_tensor(at):
-        at.to(device)
+        at = at.to(device)
 
     if isinstance(up, list) or isinstance(up, tuple):
         up = torch.tensor(up, dtype=torch.float32, device=device)
     elif isinstance(up, np.ndarray):
         up = torch.from_numpy(up).to(device)
     elif torch.is_tensor(up):
-        up.to(device)
+        up = up.to(device)
 
     if isinstance(eye, list) or isinstance(eye, tuple):
         eye = torch.tensor(eye, dtype=torch.float32, device=device)
