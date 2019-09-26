@@ -15,7 +15,7 @@ class Renderer(nn.Module):
                  camera_mode='projection',
                  P=None, dist_coeffs=None, orig_size=512,
                  perspective=True, viewing_angle=30, viewing_scale=1.0, 
-                 eye=None, camera_direction=[0,0,1],
+                 eye=None, camera_direction=[0,0,1], camera_up=None,
                  light_mode='surface',
                  light_intensity_ambient=0.5, light_color_ambient=[1,1,1],
                  light_intensity_directionals=0.5, light_color_directionals=[1,1,1],
@@ -32,7 +32,7 @@ class Renderer(nn.Module):
         self.transform = sr.Transform(camera_mode, 
                                       P, dist_coeffs, orig_size,
                                       perspective, viewing_angle, viewing_scale, 
-                                      eye, camera_direction)
+                                      eye, camera_direction, camera_up)
 
         # rasterization
         self.rasterizer = sr.Rasterizer(image_size, background_color, near, far, 
@@ -53,7 +53,7 @@ class SoftRenderer(nn.Module):
                  camera_mode='projection',
                  P=None, dist_coeffs=None, orig_size=512,
                  perspective=True, viewing_angle=30, viewing_scale=1.0, 
-                 eye=None, camera_direction=[0,0,1],
+                 eye=None, camera_direction=[0,0,1], camera_up=None,
                  light_mode='surface',
                  light_intensity_ambient=0.5, light_color_ambient=[1,1,1],
                  light_intensity_directionals=0.5, light_color_directionals=[1,1,1],
@@ -70,7 +70,7 @@ class SoftRenderer(nn.Module):
         self.transform = sr.Transform(camera_mode, 
                                       P, dist_coeffs, orig_size,
                                       perspective, viewing_angle, viewing_scale, 
-                                      eye, camera_direction)
+                                      eye, camera_direction, camera_up)
 
         # rasterization
         self.rasterizer = sr.SoftRasterizer(image_size, background_color, near, far, 
